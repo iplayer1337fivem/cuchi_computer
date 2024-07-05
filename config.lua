@@ -3,17 +3,17 @@ Config = {}
 -- JOIN MY DISCORD: https://discord.gg/qvFmwj2a2T
 
 -- Shared
-Config.Framework = "esx" -- esx/qbcore
-Config.FrameworkResourceName = "es_extended" -- the framework resource name (e.g.: "es_extended" or "qb-core")
+Config.Framework = "qbcore" -- esx/qbcore
+Config.FrameworkResourceName = "qb-core" -- the framework resource name (e.g.: "es_extended" or "qb-core")
 Config.FrameworkOptionalExportName = "" -- if you changed the function's name to get the object, place the new here
 
-Config.Locale = "EN" -- EN/FR
+Config.Locale = "DA" -- EN/FR/ES/DA/DE
 
 Config.UseItem = "laptop" -- set the item that will be used to display the interface (to disable it, let it empty)
 
 Config.DataHeists = {
     Enabled = true,
-    DisplayArea = false, -- display area on the map
+    DisplayArea = true, -- display area on the map
     Reward = { 10000, 20000 }, -- random between [1] and [2]
     TypeOfDelay = "each", -- "each": one delay for each area OR "all": one delay for all areas
     Delay = 60, -- in minutes
@@ -48,9 +48,16 @@ if IsDuplicityVersion() then
     }
 else
     Config.LaptopInVehicle = true -- make laptop usable or not in vehicles
+
+    Config.UseProps = { -- list of props (empty to disable props)
+        -- joaat("prop_laptop_01a")
+    }
+    Config.TargetSystem = true -- if true then you must have ox_target, if false prop interactions will be based on a zone check
+
     Config.UsablePositions = { -- positions where players can open a computer free to use
-        vector3(1275.5, -1710.7, 54.8),
-        vector3(1272.3, -1711.6, 54.8),
+        vec3(1275.5, -1710.7, 54.8),
+        vec3(1272.3, -1711.6, 54.8),
+        vec3(2542.75, 2579.81, 38.5),
     }
 
     CustomDrawMarker = function(coords)

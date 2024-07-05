@@ -99,26 +99,28 @@ if #Config.UsablePositions > 0 then
 end
 
 if Config.DataHeists.Enabled then
-    CreateThread(function()
-        for coords, radius in pairs(Config.DataHeists.Areas) do
-            local area = AddBlipForRadius(coords.x, coords.y, coords.z, radius + 0.0)
-            SetBlipHighDetail(area, true)
-            SetBlipColour(area, 40)
-            SetBlipAlpha(area, 180)
+    if Config.DataHeists.DisplayArea then
+        CreateThread(function()
+            for coords, radius in pairs(Config.DataHeists.Areas) do
+                local area = AddBlipForRadius(coords.x, coords.y, coords.z, radius + 0.0)
+                SetBlipHighDetail(area, true)
+                SetBlipColour(area, 40)
+                SetBlipAlpha(area, 180)
 
-            local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
+                local blip = AddBlipForCoord(coords.x, coords.y, coords.z)
 
-            SetBlipSprite(blip, 310)
-            SetBlipDisplay(blip, 4)
-            SetBlipScale(blip, 0.8)
-            SetBlipColour(blip, 49)
-            SetBlipAsShortRange(blip, true)
+                SetBlipSprite(blip, 310)
+                SetBlipDisplay(blip, 4)
+                SetBlipScale(blip, 0.8)
+                SetBlipColour(blip, 49)
+                SetBlipAsShortRange(blip, true)
 
-            BeginTextCommandSetBlipName("STRING")
-            AddTextComponentString(GetLocale("data_heist"))
-            EndTextCommandSetBlipName(blip)
-        end
-    end)
+                BeginTextCommandSetBlipName("STRING")
+                AddTextComponentString(GetLocale("data_heist"))
+                EndTextCommandSetBlipName(blip)
+            end
+        end)
+    end
 
     function GetDataHeistAtCoords(coords)
         local nearest
@@ -256,6 +258,53 @@ if Config.DataHeists.Enabled then
     RegisterNetEvent("ccmp:dataHeistCall", function(gps)
         SetNewWaypoint(gps.x, gps.y)
         CustomNotification(GetLocale("data_heist_call"))
+    end)
+end
+
+local propsLength = #Config.UseProps
+if propsLength > 0 then
+    CreateThread(function()
+        local propsList = Config.UseProps
+
+        if Config.TargetSystem then
+            exports["ox_target"]:addModel(propsList, {
+                label = GetLocale("target_computer"),
+                distance = 2.0,
+                onSelect = function(data)
+                    OpenUI(GetEntityCoords(data.entity))
+                end
+            })
+
+            return
+        end
+
+        while true do -- only when not using target system
+            if UIOpen then
+                Wait(500)
+                goto skip
+            end
+
+            local playerPedId = PlayerPedId()
+            local playerCoords = GetEntityCoords(playerPedId)
+
+            local near = false
+            for i = 1, propsLength, 1 do
+                local entity = GetClosestObjectOfType(playerCoords.x, playerCoords.y, playerCoords.z, 2.0, propsList[i], false, false, false)
+                if entity ~= 0 then
+                    CustomHelpNotification(GetLocale("start_computer"))
+
+                    if IsControlJustPressed(0, 51) then
+                        OpenUI(GetEntityCoords(entity))
+                    end
+
+                    near = true
+                    break
+                end
+            end
+
+            Wait(near and 0 or 500)
+            ::skip::
+        end
     end)
 end
 

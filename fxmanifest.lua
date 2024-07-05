@@ -3,7 +3,7 @@ game "gta5"
 lua54 "yes"
 use_experimental_fxv2_oal "yes"
 
-version "1.0.0"
+version "1.1.0"
 name "cuchi_computer"
 description "Usable computer"
 author "Cu-chi"
@@ -16,7 +16,8 @@ shared_scripts {
 }
 
 client_scripts {
-    "locales/*.lua",
+    "locales/main.lua",
+    "locales/lua/*.lua",
     "client/*.lua",
     "client/addresses/*.lua"
 }
@@ -30,7 +31,8 @@ server_scripts {
 ui_page "nui/index.html"
 
 files {
-    "locales/*.js",
+    "locales/main.js",
+    "locales/ui/*.js",
     "assets/screen.gif", -- 1:1 format for better result (256x256px forced)
     "nui/**/*"
 }
